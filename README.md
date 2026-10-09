@@ -1,9 +1,19 @@
 # WebsitesDeal Offer Page
 
-Upload all files (`index.html`, `logo.jpg`, `favicon.png`) to the repo root.
+Upload all files to the repo root, keeping the admin folder: index.html, blog.html, snkbusiness.html, posts.css, posts.js, logo.jpg, favicon.png, og.png, admin/index.html.
 
-Edit the `OFFER` block at the bottom of `index.html` to change the offer code, discount percent and end date.
+The logo and favicon are embedded inside the pages, so they show even if the image files are missing.
 
-The Our websites section loads live previews of the four sites in iframes. If a site sends an X-Frame-Options or frame-ancestors header that blocks embedding, its preview stays on the placeholder.
+## Admin dashboard (yoursite/admin/)
+1. Firebase console: create a project, add a Web app, copy the config.
+2. Build > Authentication > Sign-in method: enable Email/Password. Add your own user (Users > Add user).
+3. Build > Firestore Database: create the database, then Rules tab: paste firestore.rules (change the email) and Publish.
+4. admin/index.html and index.html are already filled in for project offerswebsitesdeal.
+5. (done)
+6. Open /admin, sign in, Site settings > Save. Add more admins from the Admins tab.
 
-Support: https://support.websitesdeal.com
+Without step 5 the page simply uses the defaults written in the OFFER block.
+
+Navbar: Home | Subscribe | Our Sites | SNK Business (snkbusiness.snkbp.com) | Blog | How it works | Support (support.websitesdeal.com)
+
+Before sharing links: replace `https://YOUR-DOMAIN/og.png` in the og:image tags with your real domain.

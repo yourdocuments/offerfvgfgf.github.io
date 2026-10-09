@@ -2,9 +2,9 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // CHANGE THIS to your super admin email (lowercase). Must match SUPER_ADMIN in admin/index.html
+    // super admin email (must match SUPER_ADMIN in admin/index.html)
     function isSuper() {
-      return request.auth != null && request.auth.token.email == "YOUR-EMAIL@example.com";
+      return request.auth != null && request.auth.token.email == "thesnkgraphic@email.com";
     }
     function isAdmin() {
       return isSuper() || (request.auth != null &&
