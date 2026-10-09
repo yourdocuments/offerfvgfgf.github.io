@@ -1,5 +1,8 @@
 # WebsitesDeal Offer Landing Page
 
+## Motion design
+The landing page includes floating offer-card motion, animated orbit rings, scroll-reveal sections, hover lift interactions, a subtle pointer glow, and a scroll progress line. It respects the reduced-motion accessibility preference. These are original animations inspired by modern SaaS landing-page patterns, not copied Apollo assets.
+
 ## Files
 - `index.html` — public single-offer landing page.
 - `admin/index.html` — demo admin dashboard.
