@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0a0c0a">
+<title>WebsitesDeal — Admin</title>
+<style>
+:root{--bg:#090b09;--panel:#111511;--line:#2a3327;--lime:#b7ff00;--muted:#a6afa1;--white:#f4f7f1}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--white);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}input,textarea,button{font:inherit}a{color:var(--lime)}.shell{width:min(980px,calc(100% - 28px));margin:36px auto}.brand{display:flex;gap:12px;align-items:center;font-weight:900;font-size:20px;margin-bottom:28px}.logo{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:var(--lime);color:#10150a}.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:26px;margin-bottom:18px}.login{max-width:440px;margin:9vh auto}.sub{color:var(--muted);font-size:13px;line-height:1.7}.grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.field{display:flex;flex-direction:column;gap:7px;margin-bottom:15px}.field label{font-size:12px;color:#c6cec0;font-weight:750}.field input,.field textarea{width:100%;border:1px solid #394334;background:#090c09;color:var(--white);padding:12px 13px;border-radius:10px;outline:none}.field input:focus,.field textarea:focus{border-color:var(--lime)}.field textarea{min-height:90px;resize:vertical}.btn{border:0;border-radius:10px;padding:12px 16px;font-weight:850;cursor:pointer}.primary{background:var(--lime);color:#10150a}.secondary{background:#242c21;color:#fff;border:1px solid #394334}.danger{background:#3b1c1c;color:#ffdcdc;border:1px solid #693030}.row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.notice{padding:13px 15px;background:#202817;border:1px solid #39472b;color:#d9f7a7;border-radius:10px;font-size:12px;line-height:1.7;margin:16px 0}.hidden{display:none!important}.status{font-size:12px;color:var(--lime);min-height:20px;margin-top:12px}.section-title{margin:0 0 8px;font-size:22px;letter-spacing:-.04em}.actions{display:flex;gap:9px;flex-wrap:wrap}.tiny{font-size:11px;color:#8f9989}.toplink{font-size:12px}
+@media(max-width:650px){.grid{grid-template-columns:1fr}.panel{padding:18px}.shell{margin:20px auto}.login{margin:7vh auto}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="brand"><span class="logo">W</span><span>WebsitesDeal <span style="color:var(--lime)">Admin</span></span><a class="toplink" href="../index.html" style="margin-left:auto">← View website</a></div>
+  <section class="panel login" id="loginPanel">
+    <h1 class="section-title">Admin sign in</h1><p class="sub">Sign in to manage the landing page offer content on this browser.</p>
+    <div class="field"><label for="username">Username</label><input id="username" autocomplete="username" value="admin"></div>
+    <div class="field"><label for="password">Demo password</label><input id="password" type="password" autocomplete="current-password" placeholder="Enter demo password"></div>
+    <button class="btn primary" id="loginBtn">Sign in →</button><div class="status" id="loginStatus"></div>
+    <div class="notice"><strong>Demo access</strong><br>Username: <code>admin</code><br>Password: <code>DealAdmin2026!</code><br>Change these in this file before publishing. This demo login is not secure authentication.</div>
+  </section>
+  <section id="dashboard" class="hidden">
+    <div class="panel"><div class="row"><div><h1 class="section-title">Offer landing page settings</h1><p class="sub">Edit your featured offer, brand copy and CTA destination.</p></div><div class="actions"><button class="btn secondary" id="previewBtn">Preview site ↗</button><button class="btn danger" id="logoutBtn">Log out</button></div></div>
+      <div class="notice"><strong>Important GitHub Pages limitation:</strong> this starter stores settings in this browser's localStorage. Changes show in the public page only in the same browser/device. Other visitors won't receive admin changes until you connect a shared backend such as Firebase. Never put private credentials or payment secrets in public HTML.</div>
+      <form id="settingsForm">
+        <h2 class="section-title">Brand & hero</h2>
+        <div class="grid">
+          <div class="field"><label for="brandName">Brand name</label><input id="brandName" name="brandName" maxlength="60" required></div>
+          <div class="field"><label for="eyebrowText">Small top label</label><input id="eyebrowText" name="eyebrowText" maxlength="80"></div>
+        </div>
+        <div class="field"><label for="heroTitle">Hero headline</label><input id="heroTitle" name="heroTitle" maxlength="130" required></div>
+        <div class="field"><label for="heroDescription">Hero description</label><textarea id="heroDescription" name="heroDescription" maxlength="500" required></textarea></div>
+        <h2 class="section-title" style="margin-top:24px">Featured offer block</h2>
+        <div class="grid">
+          <div class="field"><label for="offerBadge">Offer badge</label><input id="offerBadge" name="offerBadge" maxlength="50"></div>
+          <div class="field"><label for="offerTitle">Offer title</label><input id="offerTitle" name="offerTitle" maxlength="100" required></div>
+          <div class="field"><label for="offerPrice">Offer price (display text)</label><input id="offerPrice" name="offerPrice" maxlength="30" required></div>
+          <div class="field"><label for="oldPrice">Original price (display text)</label><input id="oldPrice" name="oldPrice" maxlength="30"></div>
+          <div class="field"><label for="saveBadge">Savings label</label><input id="saveBadge" name="saveBadge" maxlength="30"></div>
+          <div class="field"><label for="mainCta">Main button label</label><input id="mainCta" name="mainCta" maxlength="40"></div>
+        </div>
+        <div class="field"><label for="offerText">Offer description</label><textarea id="offerText" name="offerText" maxlength="300"></textarea></div>
+        <div class="field"><label for="offerUrl">Offer button destination (HTTPS URL)</label><input id="offerUrl" name="offerUrl" type="url" placeholder="https://..." required></div>
+        <h2 class="section-title" style="margin-top:24px">Benefits section</h2>
+        <div class="field"><label for="benefitTitle">Section title</label><input id="benefitTitle" name="benefitTitle" maxlength="120"></div>
+        <div class="field"><label for="benefitDescription">Section description</label><textarea id="benefitDescription" name="benefitDescription" maxlength="350"></textarea></div>
+        <div class="grid">
+          <div class="field"><label for="statOne">Highlight 1</label><input id="statOne" name="statOne" maxlength="30"></div>
+          <div class="field"><label for="statTwo">Highlight 2</label><input id="statTwo" name="statTwo" maxlength="30"></div>
+          <div class="field"><label for="statThree">Highlight 3</label><input id="statThree" name="statThree" maxlength="30"></div>
+        </div>
+        <div class="actions"><button type="submit" class="btn primary">Save settings</button><button type="button" class="btn secondary" id="resetBtn">Reset defaults</button><button type="button" class="btn secondary" id="exportBtn">Export settings JSON</button></div>
+        <div class="status" id="saveStatus" role="status"></div>
+      </form>
+    </div>
+    <div class="panel"><h2 class="section-title">Next production step</h2><p class="sub">To make admin changes update the live site for every visitor, connect Firebase Firestore and secure admin access with Firebase Authentication + database rules. This starter is intentionally backend-free so it can be uploaded to GitHub Pages immediately.</p><p class="tiny">Support: <a href="https://support.websitesdeal.com" target="_blank" rel="noopener">support.websitesdeal.com</a></p></div>
+  </section>
+</div>
+<script>
+(function(){
+ const KEY='websitesDealOfferSettingsV1';
+ const defaults={
+  brandName:'WebsitesDeal',eyebrowText:'THE WEBSITE LAUNCH EVENT',
+  heroTitle:'Your next big idea deserves a better website.',
+  heroDescription:'Launch faster with a premium ready-made website offer. Explore the featured deal, save time on setup, and build your online presence with confidence.',
+  offerBadge:'LIMITED-TIME OFFER',offerTitle:'Premium Website Launch Pack',
+  offerText:'Everything you need to get your website project moving.',
+  offerPrice:'৳2,490',oldPrice:'৳4,990',saveBadge:'SAVE 50%',
+  offerUrl:'https://support.websitesdeal.com',mainCta:'Claim the offer',
+  benefitTitle:'A better start for your next website.',
+  benefitDescription:'Skip the blank page. Start with a polished foundation and a clear path to launch.',
+  statOne:'Ready-made',statTwo:'Responsive',statThree:'Human support'
+ };
+ const DEMO_USER='admin',DEMO_PASS='DealAdmin2026!';
+ const $=id=>document.getElementById(id);
+ function read(){try{return {...defaults,...JSON.parse(localStorage.getItem(KEY)||'{}')}}catch(e){return {...defaults}}}
+ function fill(data){Object.keys(defaults).forEach(k=>{const el=$(k);if(el)el.value=data[k]??defaults[k]})}
+ function showDashboard(){ $('loginPanel').classList.add('hidden');$('dashboard').classList.remove('hidden');fill(read()) }
+ $('loginBtn').addEventListener('click',()=>{
+   if($('username').value.trim()===DEMO_USER && $('password').value===DEMO_PASS){sessionStorage.setItem('wdDemoAdmin','1');$('loginStatus').textContent='Signed in for this tab.';showDashboard()}
+   else $('loginStatus').textContent='Incorrect username or password.';
+ });
+ $('password').addEventListener('keydown',e=>{if(e.key==='Enter')$('loginBtn').click()});
+ $('logoutBtn').addEventListener('click',()=>{sessionStorage.removeItem('wdDemoAdmin');location.reload()});
+ $('settingsForm').addEventListener('submit',e=>{
+   e.preventDefault();const data={};
+   Object.keys(defaults).forEach(k=>{const el=$(k);data[k]=el?el.value.trim():defaults[k]});
+   try{const url=new URL(data.offerUrl);if(!['http:','https:'].includes(url.protocol))throw new Error('URL must use HTTP or HTTPS.')}
+   catch(err){$('saveStatus').textContent='Please enter a valid destination URL.';return}
+   localStorage.setItem(KEY,JSON.stringify(data));$('saveStatus').textContent='Saved on this browser. Open the public page in this same browser to preview.';
+ });
+ $('previewBtn').addEventListener('click',()=>window.open('../index.html','_blank','noopener'));
+ $('resetBtn').addEventListener('click',()=>{if(confirm('Reset all offer settings to defaults?')){localStorage.setItem(KEY,JSON.stringify(defaults));fill(defaults);$('saveStatus').textContent='Default settings restored on this browser.'}});
+ $('exportBtn').addEventListener('click',()=>{const blob=new Blob([JSON.stringify(read(),null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='websitesdeal-offer-settings.json';a.click();URL.revokeObjectURL(a.href)});
+ if(sessionStorage.getItem('wdDemoAdmin')==='1')showDashboard();
+})();
+</script>
+</body>
+</html>
