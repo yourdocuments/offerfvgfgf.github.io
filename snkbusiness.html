@@ -35,19 +35,56 @@
   </div>
   <div class="bar"><b>Image size</b><div class="seg" id="sizes" role="group" aria-label="Image size"></div></div>
   <div class="grid" id="grid"></div>
-  <p class="note">These are sample posts. Edit the POSTS list at the bottom of this file with your real SNK Business text.</p>
+  <p class="note">Posts are managed from the admin dashboard (Blog posts tab). The POSTS list at the bottom of this file is only the backup.</p>
   <footer><span>© 2026 SNK Business</span><a href="https://support.websitesdeal.com" target="_blank" rel="noopener">support.websitesdeal.com</a></footer>
 </main>
 <script src="posts.js"></script>
 <script>
-/* theme: lime | ink | paper. Use \n for a new line in body. */
+/* theme: lime | ink | paper | blue | forest | sunset | aurora.  layout: classic | big | list | image.  Use 
+ for a new line in body. */
 var POSTS = [
- {id:"stock",theme:"ink",tag:"Inventory",title:"Know what is in stock before a customer asks",body:"Every product, variant and quantity in one place. No more counting by hand.",caption:"Know what is in stock before a customer asks. SNK Business keeps your inventory clear.\n#SNKBusiness #Inventory"},
- {id:"orders",theme:"lime",tag:"Orders",title:"Every sale, order and payment in one place",body:"See what sold today, what is pending and who has paid.",caption:"Every sale, order and payment in one place.\n#SNKBusiness #Orders"},
- {id:"time",theme:"paper",tag:"Save time",title:"Fewer mistakes. More time for customers.",body:"Let the system do the adding up. You focus on selling.",caption:"Fewer mistakes, more time for customers.\n#SNKBusiness #SmallBusiness"},
- {id:"daily",theme:"lime",tag:"Daily summary",title:"End each day knowing exactly where you stand",body:"Sales, stock and payments summed up and ready when you close the shop.",caption:"End each day knowing exactly where you stand.\n#SNKBusiness #Business"}
+ {
+  "id": "stock",
+  "theme": "ink",
+  "layout": "classic",
+  "tag": "Inventory",
+  "title": "Know what is in stock before a customer asks",
+  "body": "Every product, variant and quantity in one place. No more counting by hand.",
+  "caption": "Know what is in stock before a customer asks. SNK Business keeps your inventory clear.\n#SNKBusiness #Inventory",
+  "image": ""
+ },
+ {
+  "id": "orders",
+  "theme": "lime",
+  "layout": "big",
+  "tag": "Orders",
+  "title": "Every sale, order and payment in one place",
+  "body": "See what sold today, what is pending and who has paid.",
+  "caption": "Every sale, order and payment in one place.\n#SNKBusiness #Orders",
+  "image": ""
+ },
+ {
+  "id": "time",
+  "theme": "paper",
+  "layout": "classic",
+  "tag": "Save time",
+  "title": "Fewer mistakes. More time for customers.",
+  "body": "Let the system do the adding up. You focus on selling.",
+  "caption": "Fewer mistakes, more time for customers.\n#SNKBusiness #SmallBusiness",
+  "image": ""
+ },
+ {
+  "id": "daily",
+  "theme": "sunset",
+  "layout": "classic",
+  "tag": "Daily summary",
+  "title": "End each day knowing exactly where you stand",
+  "body": "Sales, stock and payments summed up and ready when you close the shop.",
+  "caption": "End each day knowing exactly where you stand.\n#SNKBusiness #Business",
+  "image": ""
+ }
 ];
-renderPosts({brand:"SNK Business",url:"websitesdeal.com",cta:"",slug:"snkbusiness",posts:POSTS});
+renderPosts({brand:"SNK Business",url:"websitesdeal.com",cta:"",doc:"posts-snk",slug:"snkbusiness",posts:POSTS});
 </script>
 </body>
 </html>

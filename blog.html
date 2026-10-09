@@ -35,21 +35,76 @@
   </div>
   <div class="bar"><b>Image size</b><div class="seg" id="sizes" role="group" aria-label="Image size"></div></div>
   <div class="grid" id="grid"></div>
-  <p class="note">To add or change a post, edit the POSTS list at the bottom of this file.</p>
+  <p class="note">Posts are managed from the admin dashboard (Blog posts tab). The POSTS list at the bottom of this file is only the backup.</p>
   <footer><span>© 2026 WebsitesDeal</span><a href="https://support.websitesdeal.com" target="_blank" rel="noopener">support.websitesdeal.com</a></footer>
 </main>
 <script src="posts.js"></script>
 <script>
-/* theme: lime | ink | paper. Use \n for a new line in body. */
+/* theme: lime | ink | paper | blue | forest | sunset | aurora.  layout: classic | big | list | image.  Use 
+ for a new line in body. */
 var POSTS = [
- {id:"open-24h",theme:"lime",tag:"Tip",title:"Your shop is open 24 hours. Is your website?",body:"A website takes orders, answers questions and shows your work while you sleep. Start small, then grow.",caption:"Your shop is open 24 hours. Is your website? Get a ready-made website with hosting and SSL.\nWhatsApp 01705633700\n#WebsitesDeal #Bangladesh #SmallBusiness"},
- {id:"bkash-nagad",theme:"ink",tag:"Payments",title:"Take bKash and Nagad on your own site",body:"Customers pay the way they already do. You see every order in one admin panel.",caption:"Accept bKash, Nagad and bank payment on your own website.\nwebsitesdeal.com\n#bKash #Nagad #OnlineBusiness"},
- {id:"choose-plan",theme:"paper",tag:"Plans",title:"Starter, Business or Premium?",body:"Starter: show who you are.\nBusiness: take inquiries and payments.\nPremium: sell products with stock and orders.",caption:"Not sure which plan fits? Starter, Business or Premium. Message us and we will help you choose.\n#WebsitesDeal #Ecommerce"},
- {id:"offer-20",theme:"lime",tag:"Offer",title:"Save 20% on any plan",body:"Use code DEAL20 when you message us on WhatsApp. Offer ends 31 Oct 2026.",caption:"Save 20% on any WebsitesDeal plan with code DEAL20. Ends 31 Oct 2026.\nWhatsApp 01705633700\n#Offer #DEAL20"},
- {id:"five-things",theme:"ink",tag:"Checklist",title:"5 things every business website needs",body:"1. A clear offer at the top\n2. Real photos\n3. A WhatsApp button\n4. A fast mobile page\n5. Contact details",caption:"5 things every business website needs. Save this for later.\n#WebsiteTips #SmallBusiness"},
- {id:"free-hosting",theme:"paper",tag:"Included",title:"Free hosting and SSL on every plan",body:"No extra setup bills. Your site is secure, online and backed up.",caption:"Free hosting and SSL on every plan, plus custom domain connection.\nwebsitesdeal.com\n#Hosting #SSL"}
+ {
+  "id": "open-24h",
+  "theme": "aurora",
+  "layout": "big",
+  "tag": "Tip",
+  "title": "Your shop is open 24 hours. Is your website?",
+  "body": "A website takes orders, answers questions and shows your work while you sleep. Start small, then grow.",
+  "caption": "Your shop is open 24 hours. Is your website? Get a ready-made website with hosting and SSL.\nWhatsApp 01705633700\n#WebsitesDeal #Bangladesh #SmallBusiness",
+  "image": ""
+ },
+ {
+  "id": "bkash-nagad",
+  "theme": "ink",
+  "layout": "classic",
+  "tag": "Payments",
+  "title": "Take bKash and Nagad on your own site",
+  "body": "Customers pay the way they already do. You see every order in one admin panel.",
+  "caption": "Accept bKash, Nagad and bank payment on your own website.\nwebsitesdeal.com\n#bKash #Nagad #OnlineBusiness",
+  "image": ""
+ },
+ {
+  "id": "choose-plan",
+  "theme": "paper",
+  "layout": "list",
+  "tag": "Plans",
+  "title": "Starter, Business or Premium?",
+  "body": "Starter: show who you are.\nBusiness: take inquiries and payments.\nPremium: sell products with stock and orders.",
+  "caption": "Not sure which plan fits? Starter, Business or Premium. Message us and we will help you choose.\n#WebsitesDeal #Ecommerce",
+  "image": ""
+ },
+ {
+  "id": "offer-20",
+  "theme": "lime",
+  "layout": "big",
+  "tag": "Offer",
+  "title": "Save 20% on any plan",
+  "body": "Use code DEAL20 when you message us on WhatsApp. Offer ends 31 Oct 2026.",
+  "caption": "Save 20% on any WebsitesDeal plan with code DEAL20. Ends 31 Oct 2026.\nWhatsApp 01705633700\n#Offer #DEAL20",
+  "image": ""
+ },
+ {
+  "id": "five-things",
+  "theme": "blue",
+  "layout": "list",
+  "tag": "Checklist",
+  "title": "5 things every business website needs",
+  "body": "1. A clear offer at the top\n2. Real photos\n3. A WhatsApp button\n4. A fast mobile page\n5. Contact details",
+  "caption": "5 things every business website needs. Save this for later.\n#WebsiteTips #SmallBusiness",
+  "image": ""
+ },
+ {
+  "id": "free-hosting",
+  "theme": "forest",
+  "layout": "classic",
+  "tag": "Included",
+  "title": "Free hosting and SSL on every plan",
+  "body": "No extra setup bills. Your site is secure, online and backed up.",
+  "caption": "Free hosting and SSL on every plan, plus custom domain connection.\nwebsitesdeal.com\n#Hosting #SSL",
+  "image": ""
+ }
 ];
-renderPosts({brand:"WebsitesDeal",url:"websitesdeal.com",cta:"WhatsApp 01705633700",slug:"websitesdeal",posts:POSTS});
+renderPosts({brand:"WebsitesDeal",url:"websitesdeal.com",cta:"WhatsApp 01705633700",doc:"posts-blog",slug:"websitesdeal",posts:POSTS});
 </script>
 </body>
 </html>

@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#0B0B0A">
 <title>Admin | WebsitesDeal</title>
 <link rel="icon" type="image/png" href="../favicon.png">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;800&family=Hind+Siliguri:wght@500;700&display=swap">
 <style>
 html{color-scheme:light}body{margin:0}[hidden]{display:none!important}*{box-sizing:border-box}
 :root{--bg:#F6F6F0;--surface:#fff;--ink:#0B0B0A;--muted:#6B6B64;--line:#E6E6DD;--lime:#B6F500;--bad:#C62828;--font:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif}
@@ -42,6 +42,12 @@ input:focus{outline:none;border-color:var(--ink)}input[type=color]{padding:3px;h
 .navrow .ctl{display:flex;gap:6px;align-items:center;flex-wrap:wrap;grid-column:1/-1}
 .navrow label{display:inline-flex;align-items:center;gap:6px;margin:0;font-weight:600}.navrow input[type=checkbox]{width:auto}
 @media(max-width:560px){.navrow{grid-template-columns:1fr}}
+textarea,select{width:100%;font:500 16px var(--font);padding:11px 13px;border-radius:12px;border:2px solid var(--line);background:var(--bg);color:var(--ink)}
+textarea{resize:vertical;min-height:84px}textarea:focus,select:focus{outline:none;border-color:var(--ink)}
+.pcard{display:grid;grid-template-columns:230px 1fr;gap:18px;padding:18px 0;border-top:1px solid var(--line)}
+.pcard canvas{width:100%;height:auto;border-radius:12px;background:var(--line);display:block}
+.pcard .ctl{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+@media(max-width:640px){.pcard{grid-template-columns:1fr}.pcard canvas{max-width:260px}}
 #login{max-width:420px;margin:12vh auto 0}
 </style>
 </head>
@@ -69,6 +75,7 @@ input:focus{outline:none;border-color:var(--ink)}input[type=color]{padding:3px;h
   </div>
   <div class="tabs" id="tabs">
     <button type="button" data-t="settings" aria-pressed="true">Site settings</button>
+    <button type="button" data-t="posts" aria-pressed="false">Blog posts</button>
     <button type="button" data-t="admins" aria-pressed="false" id="adminsTab" hidden>Admins</button>
   </div>
 
@@ -106,6 +113,17 @@ input:focus{outline:none;border-color:var(--ink)}input[type=color]{padding:3px;h
     <p class="msg" id="saveMsg"></p>
   </div>
 
+  <div id="t-posts" class="card" hidden>
+    <h2>Blog posts</h2>
+    <p>The picture cards on the Blog and SNK Business pages. Pick the page, edit the cards, then press Save posts.</p>
+    <label for="postPage">Page</label>
+    <select id="postPage"><option value="posts-blog">WebsitesDeal Blog</option><option value="posts-snk">SNK Business</option></select>
+    <div style="margin:14px 0 0;display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-sm btn-lime" id="newPost" type="button">+ New post</button><button class="btn btn-sm" id="resetPosts" type="button">Reset to defaults</button></div>
+    <div id="postList"></div>
+    <div style="margin-top:18px"><button class="btn btn-lime" id="savePosts" type="button">Save posts</button></div>
+    <p class="msg" id="postMsg"></p>
+  </div>
+
   <div id="t-admins" class="card" hidden>
     <h2>Admins</h2>
     <p>Only the super admin can add or remove admins. The new admin signs in with the email and password you set here.</p>
@@ -122,6 +140,7 @@ input:focus{outline:none;border-color:var(--ink)}input[type=color]{padding:3px;h
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="../posts.js"></script>
 <script>
 /* ===== FILL THESE IN (Firebase console > Project settings > Your apps > Web app) ===== */
 var FIREBASE = {
@@ -139,6 +158,7 @@ var DEFAULTS = {
 };
 var NUM = ["starterPrice","starterPercent","businessPrice","businessPercent","premiumPrice","premiumPercent"];
 var TXT = ["brand","accent","offerCode","wa"];
+var POST_DEFAULTS = {"posts-blog": [{"id": "open-24h", "theme": "aurora", "layout": "big", "tag": "Tip", "title": "Your shop is open 24 hours. Is your website?", "body": "A website takes orders, answers questions and shows your work while you sleep. Start small, then grow.", "caption": "Your shop is open 24 hours. Is your website? Get a ready-made website with hosting and SSL.\nWhatsApp 01705633700\n#WebsitesDeal #Bangladesh #SmallBusiness", "image": ""}, {"id": "bkash-nagad", "theme": "ink", "layout": "classic", "tag": "Payments", "title": "Take bKash and Nagad on your own site", "body": "Customers pay the way they already do. You see every order in one admin panel.", "caption": "Accept bKash, Nagad and bank payment on your own website.\nwebsitesdeal.com\n#bKash #Nagad #OnlineBusiness", "image": ""}, {"id": "choose-plan", "theme": "paper", "layout": "list", "tag": "Plans", "title": "Starter, Business or Premium?", "body": "Starter: show who you are.\nBusiness: take inquiries and payments.\nPremium: sell products with stock and orders.", "caption": "Not sure which plan fits? Starter, Business or Premium. Message us and we will help you choose.\n#WebsitesDeal #Ecommerce", "image": ""}, {"id": "offer-20", "theme": "lime", "layout": "big", "tag": "Offer", "title": "Save 20% on any plan", "body": "Use code DEAL20 when you message us on WhatsApp. Offer ends 31 Oct 2026.", "caption": "Save 20% on any WebsitesDeal plan with code DEAL20. Ends 31 Oct 2026.\nWhatsApp 01705633700\n#Offer #DEAL20", "image": ""}, {"id": "five-things", "theme": "blue", "layout": "list", "tag": "Checklist", "title": "5 things every business website needs", "body": "1. A clear offer at the top\n2. Real photos\n3. A WhatsApp button\n4. A fast mobile page\n5. Contact details", "caption": "5 things every business website needs. Save this for later.\n#WebsiteTips #SmallBusiness", "image": ""}, {"id": "free-hosting", "theme": "forest", "layout": "classic", "tag": "Included", "title": "Free hosting and SSL on every plan", "body": "No extra setup bills. Your site is secure, online and backed up.", "caption": "Free hosting and SSL on every plan, plus custom domain connection.\nwebsitesdeal.com\n#Hosting #SSL", "image": ""}], "posts-snk": [{"id": "stock", "theme": "ink", "layout": "classic", "tag": "Inventory", "title": "Know what is in stock before a customer asks", "body": "Every product, variant and quantity in one place. No more counting by hand.", "caption": "Know what is in stock before a customer asks. SNK Business keeps your inventory clear.\n#SNKBusiness #Inventory", "image": ""}, {"id": "orders", "theme": "lime", "layout": "big", "tag": "Orders", "title": "Every sale, order and payment in one place", "body": "See what sold today, what is pending and who has paid.", "caption": "Every sale, order and payment in one place.\n#SNKBusiness #Orders", "image": ""}, {"id": "time", "theme": "paper", "layout": "classic", "tag": "Save time", "title": "Fewer mistakes. More time for customers.", "body": "Let the system do the adding up. You focus on selling.", "caption": "Fewer mistakes, more time for customers.\n#SNKBusiness #SmallBusiness", "image": ""}, {"id": "daily", "theme": "sunset", "layout": "classic", "tag": "Daily summary", "title": "End each day knowing exactly where you stand", "body": "Sales, stock and payments summed up and ready when you close the shop.", "caption": "End each day knowing exactly where you stand.\n#SNKBusiness #Business", "image": ""}]};
 var NAV_DEFAULT = [
   { t: "Home", u: "index.html", b: false }, { t: "Subscribe", u: "index.html#plans", b: false },
   { t: "Our Sites", u: "index.html#sites", b: false }, { t: "SNK Business", u: "https://snkbp.com", b: false },
@@ -193,7 +213,8 @@ function validLink(u) { return !/^(javascript|data|vbscript):/i.test(u) && /^(ht
   Array.prototype.forEach.call($("tabs").children, function (b) {
     b.onclick = function () {
       Array.prototype.forEach.call($("tabs").children, function (x) { x.setAttribute("aria-pressed", x === b); });
-      show("t-settings", b.dataset.t === "settings"); show("t-admins", b.dataset.t === "admins");
+      show("t-settings", b.dataset.t === "settings"); show("t-posts", b.dataset.t === "posts"); show("t-admins", b.dataset.t === "admins");
+      if (b.dataset.t === "posts" && !postsLoaded) { postsLoaded = true; loadPosts(); }
     };
   });
 
@@ -254,6 +275,99 @@ function validLink(u) { return !/^(javascript|data|vbscript):/i.test(u) && /^(ht
     db.collection("settings").doc("site").set(data)
       .then(function () { say("saveMsg", "Saved. Refresh the site to see it."); })
       .catch(function (e) { say("saveMsg", nice(e), true); })
+      .then(function () { b.disabled = false; });
+  };
+
+  /* ---- blog posts editor ---- */
+  var THEME_NAMES = { lime: "Lime", ink: "Black", paper: "Paper", blue: "Blue", forest: "Forest green", sunset: "Sunset", aurora: "Aurora" };
+  var LAYOUT_NAMES = { classic: "Classic", big: "Big headline", list: "Checklist", image: "With image" };
+  var PCFG = { "posts-blog": { brand: "WebsitesDeal", url: "websitesdeal.com", cta: "WhatsApp 01705633700" }, "posts-snk": { brand: "SNK Business", url: "websitesdeal.com", cta: "" } };
+  var pDoc = "posts-blog", pList = [], logoImg = null, previews = [], postsLoaded = false;
+  function clone(x) { return JSON.parse(JSON.stringify(x)); }
+  function newId() { return "p" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5); }
+  function validImg(u) { return !/^(javascript|data|vbscript):/i.test(u) && /^(https?:\/\/|[\w\-\/.]+$)/i.test(u); }
+  function drawAll() { previews.forEach(function (f) { f(); }); }
+  if (window.PostCards) { PostCards.loadLogo(function (im) { logoImg = im; drawAll(); }); PostCards.fonts().then(drawAll); }
+
+  function loadPosts() {
+    say("postMsg", "");
+    db.collection("settings").doc(pDoc).get().then(function (d) {
+      var l = null; try { l = JSON.parse(d.data().list); } catch (e) {}
+      pList = l && l.length ? l : clone(POST_DEFAULTS[pDoc]); editor();
+    }).catch(function (e) { pList = clone(POST_DEFAULTS[pDoc]); editor(); say("postMsg", nice(e), true); });
+  }
+  function editor() {
+    var box = $("postList"); box.textContent = ""; previews = [];
+    pList.forEach(function (p, i) {
+      var card = document.createElement("div"); card.className = "pcard";
+      var left = document.createElement("div"), right = document.createElement("div");
+      var cv = document.createElement("canvas"); left.appendChild(cv);
+      var imgEl = null, timer = null, itimer = null;
+      function preview() { if (!window.PostCards) return; try { PostCards.draw(cv, p, PCFG[pDoc], [1080, 1350], logoImg, imgEl); } catch (e) {} }
+      function later() { clearTimeout(timer); timer = setTimeout(preview, 160); }
+      function loadImg() {
+        imgEl = null; var u = String(p.image || "").trim();
+        if (!u || !validImg(u)) { later(); return; }
+        var src = (/^(https?:)?\/\//i.test(u) || u.charAt(0) === "/") ? u : "../" + u;
+        var im = new Image(); im.crossOrigin = "anonymous";
+        im.onload = function () { imgEl = im; preview(); }; im.onerror = function () { imgEl = null; preview(); };
+        im.src = src;
+      }
+      previews.push(preview);
+      function field(label, el, hint) {
+        var d = document.createElement("div"), l = document.createElement("label"); l.textContent = label; d.appendChild(l); d.appendChild(el);
+        if (hint) { var h = document.createElement("p"); h.className = "hint"; h.textContent = hint; d.appendChild(h); }
+        return d;
+      }
+      function text(key, kind, rows) {
+        var el = document.createElement(kind || "input"); if (rows) el.rows = rows; el.value = p[key] || "";
+        el.oninput = function () { p[key] = el.value; if (key === "image") { clearTimeout(itimer); itimer = setTimeout(loadImg, 400); } else later(); };
+        return el;
+      }
+      function pick(key, names) {
+        var el = document.createElement("select");
+        Object.keys(names).forEach(function (k) { var o = document.createElement("option"); o.value = k; o.textContent = names[k]; el.appendChild(o); });
+        el.value = p[key] || Object.keys(names)[0]; p[key] = el.value;
+        el.onchange = function () { p[key] = el.value; later(); };
+        return el;
+      }
+      var row = document.createElement("div"); row.className = "row";
+      row.appendChild(field("Tag", text("tag"))); row.appendChild(field("Colour", pick("theme", THEME_NAMES))); row.appendChild(field("Layout", pick("layout", LAYOUT_NAMES)));
+      right.appendChild(row);
+      right.appendChild(field("Title", text("title")));
+      right.appendChild(field("Text on the card", text("body", "textarea", 4), "A new line here is a new line on the card. In Checklist every line is one point; start lines with 1. 2. 3. to show numbers."));
+      right.appendChild(field("Caption (copied when posting)", text("caption", "textarea", 3)));
+      right.appendChild(field("Image (only for the With image layout)", text("image"), "A full https:// address, or a file you uploaded to the site, like images/offer.jpg."));
+      var ctl = document.createElement("div"); ctl.className = "ctl";
+      function mini(txt, fn, bad) { var b = document.createElement("button"); b.type = "button"; b.className = "btn btn-sm" + (bad ? " btn-bad" : ""); b.textContent = txt; b.onclick = fn; ctl.appendChild(b); }
+      if (i > 0) mini("Up", function () { pList.splice(i - 1, 0, pList.splice(i, 1)[0]); editor(); });
+      if (i < pList.length - 1) mini("Down", function () { pList.splice(i + 1, 0, pList.splice(i, 1)[0]); editor(); });
+      mini("Remove", function () { if (confirm("Remove this post?")) { pList.splice(i, 1); editor(); } }, true);
+      left.appendChild(ctl);
+      card.appendChild(left); card.appendChild(right); box.appendChild(card);
+      loadImg();
+    });
+  }
+  $("postPage").onchange = function () { pDoc = $("postPage").value; say("postMsg", ""); loadPosts(); };
+  $("newPost").onclick = function () {
+    if (pList.length >= 20) { say("postMsg", "Maximum 20 posts per page.", true); return; }
+    pList.unshift({ id: newId(), theme: "lime", layout: "classic", tag: "Tip", title: "", body: "", caption: "", image: "" }); editor();
+  };
+  $("resetPosts").onclick = function () { if (confirm("Replace the list with the default posts? (Nothing is saved until you press Save posts.)")) { pList = clone(POST_DEFAULTS[pDoc]); editor(); } };
+  $("savePosts").onclick = function () {
+    var out = [], bad = "";
+    pList.forEach(function (p) {
+      var q = { id: p.id || newId(), theme: p.theme, layout: p.layout, tag: String(p.tag || "").trim() || "Post", title: String(p.title || "").trim(), body: String(p.body || "").trim(), caption: String(p.caption || "").trim(), image: String(p.image || "").trim() };
+      if (!q.title) bad = "Every post needs a title.";
+      if (q.image && !validImg(q.image)) bad = "Image address must start with https:// or be a file path like images/offer.jpg";
+      out.push(q);
+    });
+    if (!out.length) bad = "Add at least one post.";
+    if (bad) { say("postMsg", bad, true); return; }
+    var b = $("savePosts"); b.disabled = true; say("postMsg", "Saving...");
+    db.collection("settings").doc(pDoc).set({ list: JSON.stringify(out), updatedAt: firebase.firestore.FieldValue.serverTimestamp(), updatedBy: me.email })
+      .then(function () { pList = out; say("postMsg", "Saved. Refresh the Blog page to see it."); })
+      .catch(function (e) { say("postMsg", nice(e), true); })
       .then(function () { b.disabled = false; });
   };
 
