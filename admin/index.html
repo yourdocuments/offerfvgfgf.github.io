@@ -91,6 +91,7 @@ textarea{resize:vertical;min-height:84px}textarea:focus,select:focus{outline:non
       <div><label for="endsAt">Offer ends (Bangladesh time)</label><input id="endsAt" type="datetime-local"></div>
     </div>
     <label for="wa">WhatsApp number (with country code, digits only)</label><input id="wa" inputmode="numeric" placeholder="8801705633700">
+    <label for="claimUrl">Claim button link (where "Claim ... offer" goes)</label><input id="claimUrl" type="url" placeholder="https://support.websitesdeal.com">
     <h3 style="margin-top:22px;font-size:16px">Plans</h3>
     <div class="row">
       <div><label for="starterPrice">Starter price (৳)</label><input id="starterPrice" type="number" min="0"></div>
@@ -153,11 +154,11 @@ var SUPER_ADMIN = "thesnkgraphic@email.com";   /* your own email: the only accou
 
 /* defaults match the live offer page */
 var DEFAULTS = {
-  brand: "WebsitesDeal", accent: "#B6F500", offerCode: "DEAL20", endsAt: "2026-10-31T23:59:59+06:00", wa: "8801705633700",
+  brand: "WebsitesDeal", accent: "#B6F500", offerCode: "DEAL20", endsAt: "2026-10-31T23:59:59+06:00", wa: "8801705633700", claimUrl: "https://support.websitesdeal.com",
   starterPrice: 549, starterPercent: 20, businessPrice: 999, businessPercent: 20, premiumPrice: 1999, premiumPercent: 20
 };
 var NUM = ["starterPrice","starterPercent","businessPrice","businessPercent","premiumPrice","premiumPercent"];
-var TXT = ["brand","accent","offerCode","wa"];
+var TXT = ["brand","accent","offerCode","wa","claimUrl"];
 var POST_DEFAULTS = {"posts-blog": [{"id": "open-24h", "theme": "aurora", "layout": "big", "tag": "Tip", "title": "Your shop is open 24 hours. Is your website?", "body": "A website takes orders, answers questions and shows your work while you sleep. Start small, then grow.", "caption": "Your shop is open 24 hours. Is your website? Get a ready-made website with hosting and SSL.\nWhatsApp 01705633700\n#WebsitesDeal #Bangladesh #SmallBusiness", "image": ""}, {"id": "bkash-nagad", "theme": "ink", "layout": "classic", "tag": "Payments", "title": "Take bKash and Nagad on your own site", "body": "Customers pay the way they already do. You see every order in one admin panel.", "caption": "Accept bKash, Nagad and bank payment on your own website.\nwebsitesdeal.com\n#bKash #Nagad #OnlineBusiness", "image": ""}, {"id": "choose-plan", "theme": "paper", "layout": "list", "tag": "Plans", "title": "Starter, Business or Premium?", "body": "Starter: show who you are.\nBusiness: take inquiries and payments.\nPremium: sell products with stock and orders.", "caption": "Not sure which plan fits? Starter, Business or Premium. Message us and we will help you choose.\n#WebsitesDeal #Ecommerce", "image": ""}, {"id": "offer-20", "theme": "lime", "layout": "big", "tag": "Offer", "title": "Save 20% on any plan", "body": "Use code DEAL20 when you message us on WhatsApp. Offer ends 31 Oct 2026.", "caption": "Save 20% on any WebsitesDeal plan with code DEAL20. Ends 31 Oct 2026.\nWhatsApp 01705633700\n#Offer #DEAL20", "image": ""}, {"id": "five-things", "theme": "blue", "layout": "list", "tag": "Checklist", "title": "5 things every business website needs", "body": "1. A clear offer at the top\n2. Real photos\n3. A WhatsApp button\n4. A fast mobile page\n5. Contact details", "caption": "5 things every business website needs. Save this for later.\n#WebsiteTips #SmallBusiness", "image": ""}, {"id": "free-hosting", "theme": "forest", "layout": "classic", "tag": "Included", "title": "Free hosting and SSL on every plan", "body": "No extra setup bills. Your site is secure, online and backed up.", "caption": "Free hosting and SSL on every plan, plus custom domain connection.\nwebsitesdeal.com\n#Hosting #SSL", "image": ""}], "posts-snk": [{"id": "stock", "theme": "ink", "layout": "classic", "tag": "Inventory", "title": "Know what is in stock before a customer asks", "body": "Every product, variant and quantity in one place. No more counting by hand.", "caption": "Know what is in stock before a customer asks. SNK Business keeps your inventory clear.\n#SNKBusiness #Inventory", "image": ""}, {"id": "orders", "theme": "lime", "layout": "big", "tag": "Orders", "title": "Every sale, order and payment in one place", "body": "See what sold today, what is pending and who has paid.", "caption": "Every sale, order and payment in one place.\n#SNKBusiness #Orders", "image": ""}, {"id": "time", "theme": "paper", "layout": "classic", "tag": "Save time", "title": "Fewer mistakes. More time for customers.", "body": "Let the system do the adding up. You focus on selling.", "caption": "Fewer mistakes, more time for customers.\n#SNKBusiness #SmallBusiness", "image": ""}, {"id": "daily", "theme": "sunset", "layout": "classic", "tag": "Daily summary", "title": "End each day knowing exactly where you stand", "body": "Sales, stock and payments summed up and ready when you close the shop.", "caption": "End each day knowing exactly where you stand.\n#SNKBusiness #Business", "image": ""}]};
 var NAV_DEFAULT = [
   { t: "Home", u: "index.html", b: false }, { t: "Subscribe", u: "index.html#plans", b: false },
@@ -261,6 +262,7 @@ function validLink(u) { return !/^(javascript|data|vbscript):/i.test(u) && /^(ht
     if (!/^#[0-9a-fA-F]{6}$/.test(data.accent)) bad = "Pick a colour.";
     data.wa = data.wa.replace(/\D/g, ""); if (data.wa.length < 8) bad = "Enter the WhatsApp number with country code.";
     if (!data.offerCode) bad = "Offer code cannot be empty.";
+    if (!/^https?:\/\/\S+$/i.test(data.claimUrl)) bad = "Claim button link must start with https://";
     var ends = $("endsAt").value; if (!ends) bad = "Set the end date.";
     ["starterPercent","businessPercent","premiumPercent"].forEach(function (k) { if (data[k] > 100) bad = "Discount cannot be over 100%."; });
     var links = navList.map(function (it) { return { t: String(it.t || "").trim(), u: String(it.u || "").trim(), b: !!it.b }; });

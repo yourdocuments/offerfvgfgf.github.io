@@ -321,7 +321,7 @@ footer a { font-weight: 700; color: var(--ink); }
     <div>
       <span class="pill">Limited offer</span>
       <h1>Save <span id="upto"></span><span id="pct">20%</span> on any plan</h1>
-      <p class="sub">Offer prices are shown on every plan below. Message us on WhatsApp with your offer code to claim it.</p>
+      <p class="sub">Offer prices are shown on every plan below. Open the support centre and tell us your offer code to claim it.</p>
       <p class="ends">Offer ends <b id="endsLabel">31 Oct 2026</b></p>
     </div>
     <div class="clock">
@@ -375,7 +375,7 @@ footer a { font-weight: 700; color: var(--ink); }
         <li>Basic SEO and support</li>
         <li>Uptime monitoring</li>
       </ul>
-      <a class="btn btn-lime" data-plan="Starter" href="https://wa.me/8801705633700" target="_blank" rel="noopener">Claim Starter offer</a>
+      <a class="btn btn-lime" data-plan="Starter" href="https://support.websitesdeal.com" target="_blank" rel="noopener">Claim Starter offer</a>
     </article>
 
     <article class="plan featured">
@@ -394,7 +394,7 @@ footer a { font-weight: 700; color: var(--ink); }
         <li>Advanced SEO, Analytics, Search Console</li>
         <li>Automated backup and priority support</li>
       </ul>
-      <a class="btn btn-black" data-plan="Business" href="https://wa.me/8801705633700" target="_blank" rel="noopener">Claim Business offer</a>
+      <a class="btn btn-black" data-plan="Business" href="https://support.websitesdeal.com" target="_blank" rel="noopener">Claim Business offer</a>
     </article>
 
     <article class="plan">
@@ -413,7 +413,7 @@ footer a { font-weight: 700; color: var(--ink); }
         <li>API integration and custom workflows</li>
         <li>Priority / dedicated support</li>
       </ul>
-      <a class="btn btn-lime" data-plan="Premium" href="https://wa.me/8801705633700" target="_blank" rel="noopener">Claim Premium offer</a>
+      <a class="btn btn-lime" data-plan="Premium" href="https://support.websitesdeal.com" target="_blank" rel="noopener">Claim Premium offer</a>
     </article>
   </div>
 
@@ -427,8 +427,8 @@ footer a { font-weight: 700; color: var(--ink); }
         <p>Pick Starter, Business or Premium. The offer price is already applied above.</p>
       </div>
       <div class="step">
-        <h3>Message us with the code</h3>
-        <p>Tap the plan button. WhatsApp opens with your plan and offer code filled in.</p>
+        <h3>Contact support with the code</h3>
+        <p>Tap the plan button to open the support centre. Tell us your plan and the offer code.</p>
       </div>
       <div class="step">
         <h3>We set it up</h3>
@@ -444,7 +444,7 @@ footer a { font-weight: 700; color: var(--ink); }
     <div class="faq">
       <details>
         <summary>How do I use the offer code?</summary>
-        <p>Tap a plan button. It opens WhatsApp with the code already in the message. Send it and we confirm your offer price.</p>
+        <p>Tap a plan button to open the support centre. Send us your plan and the code and we confirm your offer price.</p>
       </details>
       <details>
         <summary>Which plans does the offer cover?</summary>
@@ -532,6 +532,8 @@ var OFFER = {
   endsAt: "2026-10-31T23:59:59+06:00",
   code: "DEAL20",
   wa: "8801705633700",
+  /* where the Claim buttons go. Leave empty to open WhatsApp instead. */
+  claim: "https://support.websitesdeal.com",
   /* One entry per plan. Use percent: 20 for a percentage, or flat: 100 for ৳100 off the monthly price. */
   plans: {
     Starter:  { percent: 20 },
@@ -559,6 +561,7 @@ function startPage() {
 
   var links = document.querySelectorAll("[data-plan]");
   for (var j = 0; j < links.length; j++) {
+    if (OFFER.claim) { links[j].href = OFFER.claim; continue; }
     var msg = "Hi WebsitesDeal, I want the " + links[j].getAttribute("data-plan") + " plan with offer code " + OFFER.code;
     links[j].href = "https://wa.me/" + OFFER.wa + "?text=" + encodeURIComponent(msg);
   }
@@ -710,6 +713,7 @@ function applySettings(f) {
   });
   function money(n) { return "\u09F3" + Number(n).toLocaleString("en-US"); }
   if (v.offerCode) OFFER.code = v.offerCode;
+  if (v.claimUrl && /^https?:\/\//i.test(v.claimUrl)) OFFER.claim = v.claimUrl;
   if (v.endsAt) OFFER.endsAt = v.endsAt;
   if (v.wa) OFFER.wa = String(v.wa).replace(/\D/g, "");
   ["Starter", "Business", "Premium"].forEach(function (P) {
