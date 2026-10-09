@@ -1,0 +1,38 @@
+html{color-scheme:light}body{margin:0}[hidden]{display:none!important}
+:root{--bg:#F6F6F0;--surface:#fff;--ink:#0B0B0A;--muted:#6B6B64;--line:#E6E6DD;--lime:#B6F500;--panel:#0B0B0A;--on-panel:#fff;--panel-muted:rgba(255,255,255,.7);--font:"Inter","Hind Siliguri",system-ui,sans-serif}
+@media (prefers-color-scheme:dark){:root{--bg:#0B0B0A;--surface:#151513;--ink:#F4F4EE;--muted:#9A9A90;--line:#2A2A26;--panel:#1E1E1A;--on-panel:#F4F4EE;color-scheme:dark}}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.55;padding:0 16px env(safe-area-inset-bottom,0)}
+a{color:inherit}p,h1,h2{margin:0}h1,h2{letter-spacing:-.035em;line-height:1.05;text-wrap:balance}
+.wrap{max-width:1160px;margin-inline:auto}
+:focus-visible{outline:3px solid var(--ink);outline-offset:3px;border-radius:8px}
+.nav{position:sticky;top:env(safe-area-inset-top,0);z-index:10;background:var(--bg);border-bottom:1px solid var(--line);margin-inline:-16px;padding-inline:16px}
+.nav-in{max-width:1160px;margin-inline:auto;display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:12px}
+.brand{font-weight:800;font-size:20px;text-decoration:none;letter-spacing:-.04em;display:flex;align-items:center;gap:10px}
+.brand img{width:34px;height:34px;border-radius:9px}
+.nav-links{display:flex;align-items:center;gap:6px;font-weight:600;font-size:15px;flex-wrap:wrap}
+.nav-links a{text-decoration:none;color:var(--muted);padding:8px 14px;border-radius:999px}
+.nav-links a:hover{color:var(--ink)}
+.nav-links a[aria-current]{background:var(--lime);color:#0B0B0A;font-weight:800}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 18px;border-radius:14px;font:700 15px var(--font);border:2px solid var(--ink);cursor:pointer;background:transparent;color:var(--ink);text-decoration:none}
+.btn:hover{background:var(--ink);color:var(--bg)}
+.btn-lime{background:var(--lime);border-color:var(--lime);color:#0B0B0A}.btn-lime:hover{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.hero{margin-top:32px;background:var(--panel);color:var(--on-panel);border-radius:32px;padding:44px 40px;position:relative;overflow:hidden;isolation:isolate}
+.hero::before{content:"";position:absolute;z-index:-1;width:520px;height:520px;right:-140px;top:-200px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--lime) 42%,transparent),transparent 66%)}
+.hero h1{font-size:clamp(40px,7vw,76px);font-weight:800}
+.hero p{margin-top:16px;color:var(--panel-muted);font-size:18px;max-width:52ch}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin:28px 0 20px}
+.bar b{font-size:14px;color:var(--muted)}
+.seg{display:inline-flex;border:2px solid var(--ink);border-radius:14px;overflow:hidden}
+.seg button{border:0;background:transparent;color:var(--ink);font:700 14px var(--font);padding:9px 14px;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px;align-items:start}
+.post{background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:12px 12px 16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.post canvas{width:100%;height:auto;display:block;border-radius:14px;background:var(--line)}
+.cap{font-size:14px;color:var(--muted);padding-inline:6px;white-space:pre-line;overflow-wrap:anywhere}
+.acts{display:flex;gap:8px;flex-wrap:wrap;padding-inline:4px}
+.acts .btn{padding:9px 14px;font-size:14px;border-radius:12px;flex:1 1 auto}
+.note{color:var(--muted);font-size:14px;margin-top:20px}
+footer{margin-top:56px;padding-block:28px 48px;border-top:1px solid var(--line);color:var(--muted);font-size:14px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 24px}
+@media(max-width:700px){.hero{padding:30px 22px;border-radius:26px}}
+@media(prefers-reduced-motion:no-preference){.hero h1{animation:up .7s cubic-bezier(.2,.7,.2,1) both}@keyframes up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}}

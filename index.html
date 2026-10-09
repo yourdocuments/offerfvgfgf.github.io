@@ -3,8 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="WebsitesDeal offer on Starter, Business and Premium plans.">
-<title>WebsitesDeal Offer</title>
+<meta name="description" content="Ready-made websites with free hosting, SSL, admin panel and bKash / Nagad payment. Starter, Business and Premium plans with a limited-time offer.">
+<title>WebsitesDeal Offer | Ready-made websites from ৳439/month</title>
+<meta name="theme-color" content="#0B0B0A">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="WebsitesDeal">
+<meta property="og:title" content="WebsitesDeal Offer | Ready-made websites">
+<meta property="og:description" content="Free hosting + SSL, admin panel, bKash / Nagad payment. Claim the offer on any plan.">
+<meta property="og:image" content="https://YOUR-DOMAIN/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://YOUR-DOMAIN/og.png">
 <link rel="icon" href="favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -302,7 +312,7 @@ footer a { font-weight: 700; color: var(--ink); }
   <div class="offer">
     <div>
       <span class="pill">Limited offer</span>
-      <h1>Save <span id="pct">20%</span> on any plan</h1>
+      <h1>Save <span id="upto"></span><span id="pct">20%</span> on any plan</h1>
       <p class="sub">Offer prices are shown on every plan below. Message us on WhatsApp with your offer code to claim it.</p>
       <p class="ends">Offer ends <b id="endsLabel">31 Oct 2026</b></p>
     </div>
@@ -345,7 +355,7 @@ footer a { font-weight: 700; color: var(--ink); }
       <div class="plan-top"><h3>Starter</h3><span class="pill">Entry</span></div>
       <p class="desc">A complete ready-made website for individuals, small businesses and local brands.</p>
       <div class="old" data-base="549">৳549</div>
-      <div class="now"><b data-price="549">৳439</b><span>/month</span></div>
+      <div class="now"><b data-price="549" data-p="Starter">৳439</b><span>/month</span></div>
       <ul>
         <li>Complete ready-made website</li>
         <li>Free hosting + SSL</li>
@@ -364,7 +374,7 @@ footer a { font-weight: 700; color: var(--ink); }
       <div class="plan-top"><h3>Business</h3><span class="pill">Most Popular</span></div>
       <p class="desc">A stronger business website with admin panel, inquiries, analytics and integrations.</p>
       <div class="old" data-base="999">৳999</div>
-      <div class="now"><b data-price="999">৳799</b><span>/month</span></div>
+      <div class="now"><b data-price="999" data-p="Business">৳799</b><span>/month</span></div>
       <ul>
         <li>Everything in Starter</li>
         <li>Premium website design</li>
@@ -383,7 +393,7 @@ footer a { font-weight: 700; color: var(--ink); }
       <div class="plan-top"><h3>Premium</h3><span class="pill">Advanced</span></div>
       <p class="desc">A Shopify-style e-commerce system with inventory, orders, customers and custom workflows.</p>
       <div class="old" data-base="1999">৳1,999</div>
-      <div class="now"><b data-price="1999">৳1,599</b><span>/month</span></div>
+      <div class="now"><b data-price="1999" data-p="Premium">৳1,599</b><span>/month</span></div>
       <ul>
         <li>Shopify-style e-commerce system</li>
         <li>Advanced admin dashboard</li>
@@ -509,11 +519,16 @@ footer a { font-weight: 700; color: var(--ink); }
 <a class="wa" href="https://wa.me/8801705633700" target="_blank" rel="noopener">WhatsApp us</a>
 
 <script>
-/* Edit these values to change the offer. Prices on the cards are recalculated from percent. */
+/* Edit these values to change the offer. Card prices and the headline are recalculated from the plans below. */
 var OFFER = {
   endsAt: "2026-10-31T23:59:59+06:00",
   code: "DEAL20",
-  percent: 20
+  /* One entry per plan. Use percent: 20 for a percentage, or flat: 100 for ৳100 off the monthly price. */
+  plans: {
+    Starter:  { percent: 20 },
+    Business: { percent: 20 },
+    Premium:  { percent: 20 }
+  }
 };
 
 (function () {
@@ -521,15 +536,17 @@ var OFFER = {
   function money(n) { return "৳" + n.toLocaleString("en-US"); }
 
   document.getElementById("code").textContent = OFFER.code;
-  document.getElementById("pct").textContent = OFFER.percent + "%";
-
-  var priceEls = document.querySelectorAll("[data-price]");
+  var priceEls = document.querySelectorAll("[data-price]"), saves = [];
   for (var i = 0; i < priceEls.length; i++) {
-    var base = Number(priceEls[i].getAttribute("data-price"));
-    var target = Math.round(base * (100 - OFFER.percent) / 100);
+    var base = Number(priceEls[i].getAttribute("data-price")), cfg = OFFER.plans[priceEls[i].getAttribute("data-p")] || {};
+    var target = cfg.flat ? Math.max(0, base - cfg.flat) : Math.round(base * (100 - (cfg.percent || 0)) / 100);
+    saves.push(Math.round((base - target) / base * 100));
     priceEls[i].setAttribute("data-target", target);
     priceEls[i].textContent = money(target);
   }
+  var best = Math.max.apply(null, saves), varied = Math.min.apply(null, saves) !== best;
+  document.getElementById("pct").textContent = best + "%";
+  document.getElementById("upto").textContent = varied ? "up to " : "";
 
   var links = document.querySelectorAll("[data-plan]");
   for (var j = 0; j < links.length; j++) {
