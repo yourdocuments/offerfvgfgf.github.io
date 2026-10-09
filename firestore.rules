@@ -1,0 +1,26 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // CHANGE THIS to your super admin email (lowercase). Must match SUPER_ADMIN in admin/index.html
+    function isSuper() {
+      return request.auth != null && request.auth.token.email == "YOUR-EMAIL@example.com";
+    }
+    function isAdmin() {
+      return isSuper() || (request.auth != null &&
+        exists(/databases/$(database)/documents/admins/$(request.auth.token.email)));
+    }
+
+    // site settings: anyone can read (the public page needs them), only admins can change
+    match /settings/{doc} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // admin list: admins can read, only the super admin can add or remove
+    match /admins/{email} {
+      allow read: if isAdmin();
+      allow write: if isSuper();
+    }
+  }
+}

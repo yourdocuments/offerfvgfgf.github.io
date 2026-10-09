@@ -531,6 +531,7 @@ footer a { font-weight: 700; color: var(--ink); }
 var OFFER = {
   endsAt: "2026-10-31T23:59:59+06:00",
   code: "DEAL20",
+  wa: "8801705633700",
   /* One entry per plan. Use percent: 20 for a percentage, or flat: 100 for ৳100 off the monthly price. */
   plans: {
     Starter:  { percent: 20 },
@@ -539,7 +540,7 @@ var OFFER = {
   }
 };
 
-(function () {
+function startPage() {
   var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   function money(n) { return "৳" + n.toLocaleString("en-US"); }
 
@@ -559,7 +560,7 @@ var OFFER = {
   var links = document.querySelectorAll("[data-plan]");
   for (var j = 0; j < links.length; j++) {
     var msg = "Hi WebsitesDeal, I want the " + links[j].getAttribute("data-plan") + " plan with offer code " + OFFER.code;
-    links[j].href = "https://wa.me/8801705633700?text=" + encodeURIComponent(msg);
+    links[j].href = "https://wa.me/" + OFFER.wa + "?text=" + encodeURIComponent(msg);
   }
 
   /* countdown with a small slide each time a digit changes */
@@ -677,6 +678,59 @@ var OFFER = {
     var ro = new ResizeObserver(fitAll);
     Array.prototype.forEach.call(views, function (v) { ro.observe(v); });
   } else { window.addEventListener("resize", fitAll); }
+}
+
+/* Settings saved from admin/index.html are read here. Fill in your Firebase projectId and apiKey (same values as the admin page).
+   If they are empty, or the request is slow or fails, the defaults in OFFER above are used. */
+var SITE = { projectId: "", apiKey: "" };
+
+function applySettings(f) {
+  var v = {};
+  Object.keys(f).forEach(function (k) {
+    var x = f[k];
+    if ("stringValue" in x) v[k] = x.stringValue;
+    else if ("integerValue" in x) v[k] = Number(x.integerValue);
+    else if ("doubleValue" in x) v[k] = x.doubleValue;
+  });
+  function money(n) { return "\u09F3" + Number(n).toLocaleString("en-US"); }
+  if (v.offerCode) OFFER.code = v.offerCode;
+  if (v.endsAt) OFFER.endsAt = v.endsAt;
+  if (v.wa) OFFER.wa = String(v.wa).replace(/\D/g, "");
+  ["Starter", "Business", "Premium"].forEach(function (P) {
+    var l = P.toLowerCase();
+    if (typeof v[l + "Percent"] === "number") OFFER.plans[P] = { percent: v[l + "Percent"] };
+    if (typeof v[l + "Price"] === "number") {
+      var b = document.querySelector('[data-p="' + P + '"]');
+      if (b) {
+        b.setAttribute("data-price", v[l + "Price"]);
+        var old = b.parentNode.previousElementSibling;
+        if (old) { old.textContent = money(v[l + "Price"]); old.setAttribute("data-base", v[l + "Price"]); }
+      }
+    }
+  });
+  if (/^#[0-9a-fA-F]{6}$/.test(v.accent || "")) document.documentElement.style.setProperty("--lime", v.accent);
+  if (v.brand) {
+    var br = document.querySelector(".brand");
+    for (var i = br.childNodes.length - 1; i >= 0; i--) if (br.childNodes[i].nodeType === 3 && br.childNodes[i].nodeValue.trim()) { br.childNodes[i].nodeValue = v.brand; break; }
+  }
+  if (OFFER.wa) {
+    Array.prototype.forEach.call(document.querySelectorAll('a[href^="https://wa.me/"]'), function (a) {
+      a.href = a.href.replace(/wa\.me\/\d+/, "wa.me/" + OFFER.wa);
+    });
+    var g = document.querySelector(".support .btn-ghost");
+    if (g) g.textContent = "WhatsApp " + (OFFER.wa.indexOf("880") === 0 ? "0" + OFFER.wa.slice(3) : OFFER.wa);
+  }
+}
+
+(function boot() {
+  if (!SITE.projectId || !SITE.apiKey) { startPage(); return; }
+  var done = false;
+  function go() { if (done) return; done = true; startPage(); }
+  setTimeout(go, 2500);
+  fetch("https://firestore.googleapis.com/v1/projects/" + SITE.projectId + "/databases/(default)/documents/settings/site?key=" + SITE.apiKey)
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (d) { if (!done && d && d.fields) { try { applySettings(d.fields); } catch (e) {} } go(); })
+    .catch(go);
 })();
 </script>
 
