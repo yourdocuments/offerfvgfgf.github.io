@@ -14,6 +14,6 @@ The logo and favicon are embedded inside the pages, so they show even if the ima
 
 Without step 5 the page simply uses the defaults written in the OFFER block.
 
-Navbar: Home | Subscribe | Our Sites | SNK Business (snkbusiness.snkbp.com) | Blog | How it works | Support (support.websitesdeal.com)
+Navbar links can be edited in the admin dashboard (Site settings > Navbar links). Default: Home | Subscribe | Our Sites | SNK Business (snkbp.com) | Blog | How it works | Support (support.websitesdeal.com)
 
 Before sharing links: replace `https://YOUR-DOMAIN/og.png` in the og:image tags with your real domain.

@@ -46,3 +46,35 @@ window.renderPosts=function(cfg){
  Promise.all([fonts,ld]).then(all);
 };
 })();
+
+/* Navbar links and accent colour saved in the admin dashboard. If the request fails, the links written in the page stay. */
+(function () {
+  var SITE = { projectId: "offerswebsitesdeal", apiKey: "AIzaSyA8UcVvWrbflAaQ_UfUBlpq-LUJb1aquL0" };
+  var nav = document.querySelector(".nav-links");
+  if (!nav || !window.fetch) return;
+  function renderNav(nav, list, onIndex) {
+    var cur = (location.pathname.split("/").pop() || "index").replace(/\.html$/, "") || "index";
+    nav.textContent = "";
+    list.forEach(function (it) {
+      var t = String(it.t || "").trim(), u = String(it.u || "").trim();
+      if (!t || !u || /^(javascript|data|vbscript):/i.test(u) || !/^(https?:\/\/|\/|#|[\w-]+(\.html)?(#.*)?$)/i.test(u)) return;
+      var ext = /^https?:\/\//i.test(u), a = document.createElement("a"), orig = u;
+      if (onIndex && /^index(\.html)?(#|$)/.test(u)) u = u.indexOf("#") > -1 ? u.slice(u.indexOf("#")) : "#top";
+      a.href = u; a.textContent = t;
+      if (it.b) a.className = "btn btn-black btn-sm";
+      if (ext) { a.target = "_blank"; a.rel = "noopener"; }
+      else if (!it.b && orig.indexOf("#") < 0 && orig.replace(/\.html$/, "") === cur) a.setAttribute("aria-current", "page");
+      nav.appendChild(a);
+    });
+  }
+  
+  fetch("https://firestore.googleapis.com/v1/projects/" + SITE.projectId + "/databases/(default)/documents/settings/site?key=" + SITE.apiKey)
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (d) {
+      if (!d || !d.fields) return;
+      var f = d.fields;
+      if (f.navLinks && f.navLinks.stringValue) { try { var l = JSON.parse(f.navLinks.stringValue); if (l && l.length) renderNav(nav, l, false); } catch (e) {} }
+      var c = f.accent && f.accent.stringValue;
+      if (c && /^#[0-9a-fA-F]{6}$/.test(c)) document.documentElement.style.setProperty("--lime", c);
+    }).catch(function () {});
+})();

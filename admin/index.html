@@ -38,6 +38,10 @@ input:focus{outline:none;border-color:var(--ink)}input[type=color]{padding:3px;h
 .msg{margin-top:14px;font-weight:700;font-size:14px}.msg.bad{color:var(--bad)}
 .hint{color:var(--muted);font-size:12px;margin-top:5px}
 .setup{border-color:var(--bad)}.setup code{background:var(--line);padding:1px 6px;border-radius:6px}
+.navrow{display:grid;grid-template-columns:1fr 1.6fr auto;gap:8px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.navrow .ctl{display:flex;gap:6px;align-items:center;flex-wrap:wrap;grid-column:1/-1}
+.navrow label{display:inline-flex;align-items:center;gap:6px;margin:0;font-weight:600}.navrow input[type=checkbox]{width:auto}
+@media(max-width:560px){.navrow{grid-template-columns:1fr}}
 #login{max-width:420px;margin:12vh auto 0}
 </style>
 </head>
@@ -94,6 +98,10 @@ input:focus{outline:none;border-color:var(--ink)}input[type=color]{padding:3px;h
       <div><label for="premiumPercent">Premium discount %</label><input id="premiumPercent" type="number" min="0" max="100"></div>
     </div>
     <p class="hint">Pick a light accent colour. Text on the lime buttons is dark.</p>
+    <h3 style="margin-top:22px;font-size:16px">Navbar links</h3>
+    <p class="hint" style="margin:4px 0 8px">Shown on the offer page, Blog and SNK Business pages. Use a full address for other sites (https://snkbp.com). For pages of this site use index.html, blog.html or index.html#plans. Tick "Button" for a black button like Support.</p>
+    <div id="navRows"></div>
+    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-sm" id="addLink" type="button">+ Add link</button><button class="btn btn-sm" id="resetNav" type="button">Reset links</button></div>
     <div style="margin-top:20px"><button class="btn btn-lime" id="save" type="button">Save settings</button></div>
     <p class="msg" id="saveMsg"></p>
   </div>
@@ -131,6 +139,13 @@ var DEFAULTS = {
 };
 var NUM = ["starterPrice","starterPercent","businessPrice","businessPercent","premiumPrice","premiumPercent"];
 var TXT = ["brand","accent","offerCode","wa"];
+var NAV_DEFAULT = [
+  { t: "Home", u: "index.html", b: false }, { t: "Subscribe", u: "index.html#plans", b: false },
+  { t: "Our Sites", u: "index.html#sites", b: false }, { t: "SNK Business", u: "https://snkbp.com", b: false },
+  { t: "Blog", u: "blog.html", b: false }, { t: "How it works", u: "index.html#how", b: false },
+  { t: "Support", u: "https://support.websitesdeal.com", b: true }
+];
+function validLink(u) { return !/^(javascript|data|vbscript):/i.test(u) && /^(https?:\/\/|\/|#|[\w-]+(\.html)?(#.*)?$)/i.test(u); }
 
 (function () {
   function $(id) { return document.getElementById(id); }
@@ -182,10 +197,37 @@ var TXT = ["brand","accent","offerCode","wa"];
     };
   });
 
+  /* ---- navbar link editor ---- */
+  var navList = JSON.parse(JSON.stringify(NAV_DEFAULT));
+  function renderRows() {
+    var box = $("navRows"); box.textContent = "";
+    navList.forEach(function (it, i) {
+      var row = document.createElement("div"); row.className = "navrow";
+      function inp(val, ph, key) {
+        var x = document.createElement("input"); x.value = val; x.placeholder = ph; x.setAttribute("aria-label", ph);
+        x.oninput = function () { it[key] = x.value; }; return x;
+      }
+      row.appendChild(inp(it.t, "Name", "t")); row.appendChild(inp(it.u, "https://...", "u"));
+      var ctl = document.createElement("div"); ctl.className = "ctl";
+      var lb = document.createElement("label"), cb = document.createElement("input"); cb.type = "checkbox"; cb.checked = !!it.b;
+      cb.onchange = function () { it.b = cb.checked; }; lb.appendChild(cb); lb.appendChild(document.createTextNode("Button")); ctl.appendChild(lb);
+      function mini(txt, fn, bad) { var b = document.createElement("button"); b.type = "button"; b.className = "btn btn-sm" + (bad ? " btn-bad" : ""); b.textContent = txt; b.onclick = fn; ctl.appendChild(b); }
+      if (i > 0) mini("Up", function () { navList.splice(i - 1, 0, navList.splice(i, 1)[0]); renderRows(); });
+      if (i < navList.length - 1) mini("Down", function () { navList.splice(i + 1, 0, navList.splice(i, 1)[0]); renderRows(); });
+      mini("Remove", function () { navList.splice(i, 1); renderRows(); }, true);
+      row.appendChild(ctl); box.appendChild(row);
+    });
+  }
+  $("addLink").onclick = function () { if (navList.length >= 10) { say("saveMsg", "Maximum 10 links.", true); return; } navList.push({ t: "", u: "https://", b: false }); renderRows(); };
+  $("resetNav").onclick = function () { navList = JSON.parse(JSON.stringify(NAV_DEFAULT)); renderRows(); };
+  renderRows();
+
   /* ---- settings ---- */
   function fill(s) {
     TXT.concat(NUM).forEach(function (k) { $(k).value = s[k] != null ? s[k] : DEFAULTS[k]; });
     $("endsAt").value = String(s.endsAt || DEFAULTS.endsAt).slice(0, 16);
+    try { var nl = JSON.parse(s.navLinks); navList = nl && nl.length ? nl : JSON.parse(JSON.stringify(NAV_DEFAULT)); } catch (e) { navList = JSON.parse(JSON.stringify(NAV_DEFAULT)); }
+    renderRows();
   }
   function loadSettings() {
     db.collection("settings").doc("site").get().then(function (d) { fill(Object.assign({}, DEFAULTS, d.exists ? d.data() : {})); })
@@ -200,7 +242,11 @@ var TXT = ["brand","accent","offerCode","wa"];
     if (!data.offerCode) bad = "Offer code cannot be empty.";
     var ends = $("endsAt").value; if (!ends) bad = "Set the end date.";
     ["starterPercent","businessPercent","premiumPercent"].forEach(function (k) { if (data[k] > 100) bad = "Discount cannot be over 100%."; });
+    var links = navList.map(function (it) { return { t: String(it.t || "").trim(), u: String(it.u || "").trim(), b: !!it.b }; });
+    links.forEach(function (it) { if (!it.t || !validLink(it.u)) bad = "Check navbar links: every link needs a name and a full address like https://snkbp.com"; });
+    if (!links.length) bad = "Add at least one navbar link.";
     if (bad) { say("saveMsg", bad, true); return; }
+    data.navLinks = JSON.stringify(links);
     data.endsAt = ends + ":59+06:00";
     data.updatedAt = firebase.firestore.FieldValue.serverTimestamp();
     data.updatedBy = me.email;

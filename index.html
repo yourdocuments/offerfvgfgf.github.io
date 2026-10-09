@@ -308,7 +308,7 @@ footer a { font-weight: 700; color: var(--ink); }
     <a href="#top" aria-current="page">Home</a>
     <a href="#plans">Subscribe</a>
     <a href="#sites">Our Sites</a>
-    <a href="https://snkbusiness.snkbp.com" target="_blank" rel="noopener">SNK Business</a>
+    <a href="https://snkbp.com" target="_blank" rel="noopener">SNK Business</a>
     <a href="blog.html">Blog</a>
     <a href="#how">How it works</a>
     <a class="btn btn-black btn-sm" href="https://support.websitesdeal.com" target="_blank" rel="noopener">Support</a>
@@ -684,6 +684,22 @@ function startPage() {
    If they are empty, or the request is slow or fails, the defaults in OFFER above are used. */
 var SITE = { projectId: "offerswebsitesdeal", apiKey: "AIzaSyA8UcVvWrbflAaQ_UfUBlpq-LUJb1aquL0" };
 
+function renderNav(nav, list, onIndex) {
+  var cur = (location.pathname.split("/").pop() || "index").replace(/\.html$/, "") || "index";
+  nav.textContent = "";
+  list.forEach(function (it) {
+    var t = String(it.t || "").trim(), u = String(it.u || "").trim();
+    if (!t || !u || /^(javascript|data|vbscript):/i.test(u) || !/^(https?:\/\/|\/|#|[\w-]+(\.html)?(#.*)?$)/i.test(u)) return;
+    var ext = /^https?:\/\//i.test(u), a = document.createElement("a"), orig = u;
+    if (onIndex && /^index(\.html)?(#|$)/.test(u)) u = u.indexOf("#") > -1 ? u.slice(u.indexOf("#")) : "#top";
+    a.href = u; a.textContent = t;
+    if (it.b) a.className = "btn btn-black btn-sm";
+    if (ext) { a.target = "_blank"; a.rel = "noopener"; }
+    else if (!it.b && orig.indexOf("#") < 0 && orig.replace(/\.html$/, "") === cur) a.setAttribute("aria-current", "page");
+    nav.appendChild(a);
+  });
+}
+
 function applySettings(f) {
   var v = {};
   Object.keys(f).forEach(function (k) {
@@ -708,6 +724,7 @@ function applySettings(f) {
       }
     }
   });
+  if (v.navLinks) { try { var nl = JSON.parse(v.navLinks); if (nl && nl.length) renderNav(document.querySelector(".nav-links"), nl, true); } catch (e) {} }
   if (/^#[0-9a-fA-F]{6}$/.test(v.accent || "")) document.documentElement.style.setProperty("--lime", v.accent);
   if (v.brand) {
     var br = document.querySelector(".brand");
